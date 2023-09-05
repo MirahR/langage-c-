@@ -2,83 +2,77 @@
 #include<string>
 #include <vector>
 #include <iomanip> 
+#include "GenerationCPP.cpp"
+using namespace std;
 
 
-std::string ajoutNomClasse(){
-
-    std::string nomClasse;
-    std::cout <<"Merci de saisir le nom de votre Classe\n";
-    std::cin>> nomClasse;
-
-
-
+string ajoutNomClasse()
+{
+    string nomClasse;
+    cout <<"Merci de saisir le nom de votre Classe\n";
+    cin>> nomClasse;    
+    nomClasse[0]= toupper(nomClasse[0]);
     return nomClasse;
 } 
 
-void affichageAttribut(std::vector<std::string> attributs, std::string nomClasse){
+vector<string> ajouterAttribut(vector<string> attributs)
+{
+    string attribut;
+    cout << "Nom de l'attribut: \n";
+    cin.ignore(); 
+    cin>> attribut;
+    attributs.push_back(attribut);
+    return attributs;
+} 
 
-    std::cout<<"NOM DE LA CLASSE : "<<nomClasse<<std::endl;
-    std::cout<<std::endl;
-    std::cout<<"Listes des attributs"<<std::endl;
-    for (std::string attribut : attributs){
-
-        std::cout<<attribut<<std::endl;
+void affichageAttribut(vector<string> attributs, string nomClasse)
+{
+    cout<<"NOM DE LA CLASSE : "<<nomClasse<<endl;
+    cout<<endl;
+    cout<<"Listes des attributs"<<endl;
+    for (string attribut : attributs)
+    {
+        cout<<attribut<<endl;
     }
-
-
 }
-   
+       
 
 int main(){
 
-    std::string nomClasse;
-    std::string attribut;
-    std::vector<std::string> attributs;
-
-
-    std::cout <<"Merci de saisir le nom de votre Classe\n";
-    std::cin>> nomClasse;
-
+    string nomClasse;
+   
+    vector<string> attributs;
+    nomClasse = ajoutNomClasse();
+    
     bool ajouter=true;
 
-    while( ajouter){
+    while(ajouter){
         int choix;
-        std:: cout <<"1. Ajouter un attribut de classe\n";
-        std:: cout <<"2. afficher la liste des attributs de la classe\n";
-        std:: cout <<"3. Terminer\n";
-        std::cin>> choix;
+        cout <<"1. Ajouter un attribut de classe\n";
+        cout <<"2. afficher la liste des attributs de la classe\n";
+        cout <<"3. Terminer\n";
+        cin>> choix;
             
       switch (choix)
       {
       case 1:
-        std::cout << "Nom de l'attribut: \n";
-        std::cin.ignore(); 
-        std::cin>> attribut;
-        attributs.push_back(attribut);
-            
+        attributs=ajouterAttribut(attributs);
         break;
-
-      case 3:
-        ajouter= false;
-        break;
-      
       case 2:
         affichageAttribut(attributs,nomClasse);
         break;
-
+      case 3:
+        ajouter = false;
+        break;
       default:
-        std::cout<<" Erreur de saisie!!\n";
+        ajouter = false;
+        cout<< "Erreur de saisie!!\n";
         break;
       }
-  
     }
+
+    generationFichierMain(nomClasse, attributs);
 }
-
-
-
-
-
-
 
 
 

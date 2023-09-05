@@ -4,64 +4,84 @@
 # include <cctype>
 # include <algorithm>
 # include <vector>
+# include <iomanip>
 using namespace std;
 
-void creationFichier_h(string nom_de_la_classe)
+// Création fichier .h vide
+void creationFichier_h(string nomClasse)
 {
-    std::ofstream fichier_h(nom_de_la_classe + ".h");
-
+    std::ofstream fichier_h(nomClasse + ".h");
     if (fichier_h.is_open()) {
-        std::cout << "Le fichier " << nom_de_la_classe << ".h a bien été créé" << std::endl;
+        std::cout << "Le fichier " << nomClasse << ".h a bien été créé" << endl;
         fichier_h.close();
     } else {
-        std::cout << "Erreur lors de la création du fichier " << nom_de_la_classe << ".h" << std::endl;
+        std::cout << "Erreur lors de la création du fichier " << nomClasse << ".h" << endl;
         // Quitter le programme en cas d'erreur
     }    
 }
 
-void ecritureFichier_h(string nom_de_la_classe, vector<string> attribut)
+// Ecriture dans le fichier .h
+void ecritureFichier_h(string nomClasse, vector<string> attributs)
 {
-    string nom_de_la_classe_Maj = nom_de_la_classe;
-    transform(nom_de_la_classe_Maj.begin(), nom_de_la_classe_Maj.end(), nom_de_la_classe_Maj.begin(), ::toupper);
+    string nomClasse_Maj = nomClasse;
+    transform(nomClasse_Maj.begin(), nomClasse_Maj.end(), nomClasse_Maj.begin(), ::toupper);
 
-    int nbAttribut = size(attribut);
+    int nbAttribut = size(attributs);
 
-    std::ofstream file(nom_de_la_classe + ".h");
+    std::ofstream file(nomClasse + ".h");
     if (file.is_open()) {
 
-        file << "# ifndef " + nom_de_la_classe_Maj + "_H" << std::endl;
-        file << "# define " + nom_de_la_classe_Maj + "_H\n" << std::endl;
-        file << "class " + nom_de_la_classe + " {" << std::endl;
+        file << "# ifndef " + nomClasse_Maj + "_H" << endl;
+        file << "# define " + nomClasse_Maj + "_H\n" << endl;
+        file << "class " + nomClasse + " {" << endl;
         file << "public:" << endl;
-        file << "\t" << nom_de_la_classe + "();" << endl;
-        file << "\t" << nom_de_la_classe << "(";
+        file << "\t" + nomClasse + "();" << endl;
+        file << "\t" + nomClasse + "(";
         for (int i = 0; i < nbAttribut; i++)
         {
             if (i == nbAttribut - 1){
-                file << "int " << attribut[i] << ");" << endl;;
+                file << "int " + attributs[i] + ");\n" << endl;;
             } else {
-            file << "int " << attribut[i] << ",";
+            file << "int " + attributs[i] + ",";
             }
         }
 
+        for (int i = 0; i < nbAttribut; i++)
+        {
+            attributs[i][0] = toupper(attributs[i][0]);
+            file << "\tint get" << attributs[i] << "() const;" << endl;
+            attributs[i][0] = tolower(attributs[i][0]);
+            file << "\tvoid set" << attributs[i] << "(int " << attributs[i] << ");\n" << endl;
+        }
 
-        std::cout << "Fichier enregistré !" << std::endl;
+        file << "private:\n";
+        for (auto e: attributs)
+        {
+            file << "\tint " + e +";" << endl;
+        }
+        file << "};\n" << endl;
+        file << "# endif" << endl;
+
+        cout << "Fichier " + nomClasse + ".h enregistré !" << endl;
         file.close();
     } else {
-        std::cout << "Problème d'ouverture du fichier pour écriture... Veuillez réessayer l'opération." << std::endl;
+        cout << "Problème d'ouverture du fichier pour écriture... Veuillez réessayer l'opération." << endl;
     }
 
 }
 
-int main() 
+void generationFichierh(string nomClasse, vector<string> &attributs)
 {
-    creationFichier_h("MyClass");
-    vector <string> attribut(2);
-    attribut[0] = "value1";
-    attribut[1] = "value2";
-    ecritureFichier_h("MyClass", attribut);
-
-
-
-    return 0;
+    creationFichier_h(nomClasse);
+    ecritureFichier_h(nomClasse, attributs);
 }
+
+//int main() 
+//{
+//    string nomClasse = "MyClass";
+//    vector <string> attributs(2);
+//    attributs[0] = "value1";
+//    attributs[1] = "value2";
+//    generationFichierh(nomClasse, attributs);
+//    return 0;
+//}
